@@ -39,5 +39,8 @@
     <Compile Include="RoleRank.cs" />
     <Compile Include="ServerMessageTransceiver.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
