@@ -27,6 +27,17 @@
   <ItemGroup>
     <Compile Include="Card.cs" />
     <Compile Include="Suit.cs" />
+    <Compile Include="ClientMessageTransceiver.cs" />
+    <Compile Include="Daifugo.cs" />
+    <Compile Include="DaifugoFunction.cs" />
+    <Compile Include="DaifugoStatus.cs" />
+    <Compile Include="Deck.cs" />
+    <Compile Include="EndMessage.cs" />
+    <Compile Include="LocalRule.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="ResultOfPlayingCards.cs" />
+    <Compile Include="RoleRank.cs" />
+    <Compile Include="ServerMessageTransceiver.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
