@@ -55,8 +55,35 @@ namespace Daifugo
         {
             this.messageTransceiver = messageTransceiver;
 
-            this.messageTransceiver.ReceivedStatus += ReceiveStatus;
-            this.messageTransceiver.ReceivedEndMessage += EndGameOrRound;
+            EventHandler<ReceivedPlayerIdArgs> receivedPlayerIdHandler = (sender, args) =>
+            {
+                id = args.PlayerId;
+            };
+            this.messageTransceiver.ReceivedPlayerId += receivedPlayerIdHandler;
+
+            EventHandler<ReceivedStatusArgs> receivedStatusHandler = (sender, args) =>
+            {
+                publicStatus = args.PublicStatus;
+                privateStatus = args.PrivateStatus;
+                UpdatedStatus?.Invoke(this, new UpdatedStatusArgs(publicStatus, privateStatus));
+            };
+            this.messageTransceiver.ReceivedStatus += receivedStatusHandler;
+
+            EventHandler<ReceivedEndMessageArgs> receivedEndMessageHandler = (sender, args) =>
+            {
+                switch (args.EndMessage)
+                {
+                    case EndMessage.NotEnd:
+                        break;
+                    case EndMessage.EndRound:
+                        EndedRound?.Invoke(this, new EndedRoundArgs());
+                        break;
+                    case EndMessage.EndGame:
+                        EndedGame?.Invoke(this, new EndedGameArgs());
+                        break;
+                }
+            };
+            this.messageTransceiver.ReceivedEndMessage += receivedEndMessageHandler;
         }
 
         /// <summary>
@@ -98,36 +125,6 @@ namespace Daifugo
         public ResultOfPlaying PlayCards(List<Card> cards)
         {
             return ResultOfPlaying.Accepted;
-        }
-
-
-
-        /// <summary>
-        /// ゲーム状態を受け取る
-        /// </summary>
-        private void ReceiveStatus(object sender, ReceivedStatusArgs args)
-        {
-            publicStatus = args.PublicStatus;
-            privateStatus = args.PrivateStatus;
-            UpdatedStatus?.Invoke(this, new UpdatedStatusArgs(publicStatus, privateStatus));
-        }
-
-        /// <summary>
-        /// ゲーム終了
-        /// </summary>
-        private void EndGameOrRound(object sender, ReceivedEndMessageArgs args)
-        {
-            switch (args.EndMessage)
-            {
-                case EndMessage.NotEnd:
-                    break;
-                case EndMessage.EndRound:
-                    EndedRound?.Invoke(this, new EndedRoundArgs());
-                    break;
-                case EndMessage.EndGame:
-                    EndedGame?.Invoke(this, new EndedGameArgs());
-                    break;
-            }
         }
     }
 }
