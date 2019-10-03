@@ -63,9 +63,10 @@ namespace Daifugo
         /// ゲームに参加
         /// </summary>
         /// <returns></returns>
-        public async Task<int> JoinGame()
+        public int JoinGame()
         {
-            id = await messageTransceiver.SendJoinRequestAsync();
+            var task = messageTransceiver.SendJoinRequestAsync();
+            task.Wait();
 
             if (id == -1)
             {
@@ -84,10 +85,9 @@ namespace Daifugo
         /// </summary>
         /// <param name="cards"></param>
         /// <returns></returns>
-        public async Task<ResultOfPlayingCards> TradeCards(List<Card> cards)
+        public ResultOfPlaying TradeCards(List<Card> cards)
         {
-            var result = await messageTransceiver.SendCardsAsync(id, cards);
-            return result;
+            return ResultOfPlaying.Accepted;
         }
 
         /// <summary>
@@ -95,10 +95,9 @@ namespace Daifugo
         /// </summary>
         /// <param name="cards"></param>
         /// <returns></returns>
-        public async Task<ResultOfPlayingCards> PlayCards(List<Card> cards)
+        public ResultOfPlaying PlayCards(List<Card> cards)
         {
-            var result = await messageTransceiver.SendCardsAsync(id, cards);
-            return result;
+            return ResultOfPlaying.Accepted;
         }
 
 

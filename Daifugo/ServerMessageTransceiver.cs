@@ -60,15 +60,15 @@ namespace Daifugo
         /// <param name="playerId"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        Task SendResultOfCards(int playerId, int result);
+        Task SendResultOfPlayingAsync(int playerId, ResultOfPlaying result);
 
         /// <summary>
         /// ゲーム終了か通知
         /// Server2Client
         /// </summary>
         /// <param name="playerId"></param>
-        /// <param name="isEnd"></param>
+        /// <param name="message"></param>
         /// <returns></returns>
-        Task SendEndingAsync(int playerId, int isEnd);
+        Task SendEndMessageAsync(int playerId, EndMessage message);
     }
 }

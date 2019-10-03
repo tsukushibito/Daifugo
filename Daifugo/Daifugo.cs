@@ -200,7 +200,7 @@ namespace Daifugo
         /// <param name="playerId"></param>
         /// <param name="cards"></param>
         /// <returns></returns>
-        private ResultOfPlayingCards ReceivedCard(int playerId, List<Card> cards)
+        private ResultOfPlaying ReceivedCard(int playerId, List<Card> cards)
         {
             switch (phase)
             {
@@ -214,7 +214,7 @@ namespace Daifugo
                     break;
             }
 
-            return ResultOfPlayingCards.Accepted;
+            return ResultOfPlaying.Accepted;
         }
 
         /// <summary>
@@ -223,15 +223,15 @@ namespace Daifugo
         /// <param name="playerId"></param>
         /// <param name="cards"></param>
         /// <returns></returns>
-        private ResultOfPlayingCards ReceivedTradingCards(int playerId, List<Card> cards)
+        private ResultOfPlaying ReceivedTradingCards(int playerId, List<Card> cards)
         {
-            var result = ResultOfPlayingCards.Accepted;
+            var result = ResultOfPlaying.Accepted;
             do
             {
                 // カード枚数チェック
                 if (players[playerId].tradingCardCount != cards.Count)
                 {
-                    result = ResultOfPlayingCards.NotAccepted;
+                    result = ResultOfPlaying.NotAccepted;
                     break;
                 }
 
@@ -255,7 +255,7 @@ namespace Daifugo
                 if (opponent == null)
                 {
                     // logger( LogLevel.Error, "Not found opponent!");
-                    result = ResultOfPlayingCards.NotAccepted;
+                    result = ResultOfPlaying.NotAccepted;
                     break;
                 }
 
@@ -264,7 +264,7 @@ namespace Daifugo
                 {
                     // 不正なカードが指定されていた
                     // logger( LogLevel.Error, "Received card is invalid!");
-                    result = ResultOfPlayingCards.NotAccepted;
+                    result = ResultOfPlaying.NotAccepted;
                     break;
                 }
 
@@ -280,16 +280,16 @@ namespace Daifugo
         /// <param name="playerId"></param>
         /// <param name="cards"></param>
         /// <returns></returns>
-        private ResultOfPlayingCards ReceivedPlayingCards(int playerId, List<Card> cards)
+        private ResultOfPlaying ReceivedPlayingCards(int playerId, List<Card> cards)
         {
-            ResultOfPlayingCards result = ResultOfPlayingCards.Accepted;
+            ResultOfPlaying result = ResultOfPlaying.Accepted;
 
             do
             {
                 if (playerId != turn)
                 {
                     // logger( LogLevel.Error, "Not player turn. Player(" + playerId + ")");
-                    result = ResultOfPlayingCards.NotAccepted;
+                    result = ResultOfPlaying.NotAccepted;
                     // フェーズを進めずリターン
                     return result;
                 }
@@ -303,7 +303,7 @@ namespace Daifugo
                     fieldStack.Push(cards);
                     // パスフラグをリセット
                     players.ForEach(p => p.hasPassed = false);
-                    result = ResultOfPlayingCards.Accepted;
+                    result = ResultOfPlaying.Accepted;
                 }
                 else
                 {
@@ -318,7 +318,7 @@ namespace Daifugo
                         }
                         players.ForEach(p => p.hasPassed = false);
                     }
-                    result = ResultOfPlayingCards.NotAccepted;
+                    result = ResultOfPlaying.NotAccepted;
                 }
 
             } while (false);
@@ -415,7 +415,7 @@ namespace Daifugo
                 var task = messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
                 tasks.Add(task);
             }
-            foreach(var task in tasks)
+            foreach (var task in tasks)
             {
                 task.Wait();
             }
@@ -443,7 +443,7 @@ namespace Daifugo
                 var task = messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
                 tasks.Add(task);
             }
-            foreach(var task in tasks)
+            foreach (var task in tasks)
             {
                 task.Wait();
             }
