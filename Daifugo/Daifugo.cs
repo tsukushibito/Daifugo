@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Daifugo
 {
@@ -35,6 +36,8 @@ namespace Daifugo
 
         private bool isStoppedAcceptingPlayer = false;
 
+        private bool hasEnded = false;
+
 
         public ReadOnlyCollection<LocalRule> LocalRules { get { return rules.AsReadOnly(); } }
 
@@ -52,14 +55,14 @@ namespace Daifugo
 
             InitializeGame(5, null);
 
-            this.messageTransceiver.ReceivedJoin += () =>
+            this.messageTransceiver.ReceivedJoinRequest += (sender, args) =>
             {
-                return AddPlayer();
+                AddPlayer();
             };
 
-            this.messageTransceiver.ReceivedCards += (playerId, cards) =>
+            this.messageTransceiver.ReceivedCards += (sender, args) =>
             {
-                return ReceivedCard(playerId, cards);
+                ReceivedCard(args.PlayerId, args.Cards);
             };
         }
 
@@ -80,38 +83,41 @@ namespace Daifugo
         }
 
         /// <summary>
-        /// 更新処理
+        /// 実行
         /// </summary>
         /// <returns></returns>
-        public IEnumerator Update()
+        public void Run()
         {
             while (true)
             {
                 switch (phase)
                 {
                     case Phase.AcceptingPlayer:
-                        yield return UpdateAcceptingPlayer();
+                        UpdateAcceptingPlayer();
                         break;
 
                     case Phase.Trading:
-                        yield return UpdateTrading();
+                        UpdateTrading();
                         break;
 
                     case Phase.BeforPlaying:
-                        yield return UpdateBeforPlaying();
+                        UpdateBeforPlaying();
                         break;
 
                     case Phase.AfterPlaying:
-                        yield return UpdateAfterPlaying();
+                        UpdateAfterPlaying();
+                        break;
+                    default:
                         break;
                 }
 
                 if (phase == Phase.End)
                 {
-                    yield return Phase.End;
                     break;
                 }
             }
+
+            hasEnded = true;
         }
 
         /// <summary>
@@ -326,11 +332,10 @@ namespace Daifugo
         /// プレイヤー参加受付時処理
         /// </summary>
         /// <returns></returns>
-        private IEnumerator UpdateAcceptingPlayer()
+        private void UpdateAcceptingPlayer()
         {
             while (players.Count < playerCount && !isStoppedAcceptingPlayer)
             {
-                yield return phase;
             }
 
             if (isStoppedAcceptingPlayer)
@@ -349,7 +354,7 @@ namespace Daifugo
         /// カード交換時処理
         /// </summary>
         /// <returns></returns>
-        private IEnumerator UpdateTrading()
+        private void UpdateTrading()
         {
             // ランクに応じたカード交換枚数を設定
             foreach (var player in players)
@@ -376,15 +381,21 @@ namespace Daifugo
 
             // ゲーム状況を各プレイヤーに通知
             var publicStatus = MakePublicStatus();
+            var tasks = new List<Task>();
             foreach (var player in players)
             {
-                messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
+                var task = messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
+                tasks.Add(task);
+            }
+            foreach (var task in tasks)
+            {
+                task.Wait();
             }
 
             // クライアントから交換カード受け取り待ち
             while (players.Count(p => p.tradingCardCount > 0) > 0)
             {
-                yield return phase;
+                if (phase == Phase.End) return;
             }
 
             phase = Phase.BeforPlaying;
@@ -394,35 +405,47 @@ namespace Daifugo
         /// プレイヤーの提出カード受け取り前処理
         /// </summary>
         /// <returns></returns>
-        private IEnumerator UpdateBeforPlaying()
+        private void UpdateBeforPlaying()
         {
             // 手札を各プレイヤーに通知
             var publicStatus = MakePublicStatus();
+            var tasks = new List<Task>();
             foreach (var player in players)
             {
-                messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
+                var task = messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
+                tasks.Add(task);
+            }
+            foreach(var task in tasks)
+            {
+                task.Wait();
             }
 
             // ターンのプレイヤーからのカード提出待ち
             while (phase == Phase.BeforPlaying)
             {
-                yield return phase;
+                if (phase == Phase.End) return;
             }
 
-            yield break;
+            phase = Phase.AfterPlaying;
         }
 
         /// <summary>
         /// プレイヤーの提出カード受け取りご処理
         /// </summary>
         /// <returns></returns>
-        private IEnumerator UpdateAfterPlaying()
+        private void UpdateAfterPlaying()
         {
             // ゲーム情報を各プレイヤーに通知
             var publicStatus = MakePublicStatus();
+            var tasks = new List<Task>();
             foreach (var player in players)
             {
-                messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
+                var task = messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
+                tasks.Add(task);
+            }
+            foreach(var task in tasks)
+            {
+                task.Wait();
             }
 
             // ゲーム終了か各プレイヤーに通知
@@ -453,14 +476,13 @@ namespace Daifugo
                     {
                         // System.Diagnostics.Debug.Assert(false);
                         phase = Phase.End;
-                        yield break;
                     }
+                    if (phase == Phase.End) return;
+
                 } while (players[turn].hand.Count == 0);
 
                 phase = Phase.BeforPlaying;
             }
-
-            yield break;
         }
     }
 }

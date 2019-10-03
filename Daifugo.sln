@@ -1,6 +1,7 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daifugo", "Daifugo\Daifugo.csproj", "{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}"
 EndProject
 Global
@@ -9,9 +10,15 @@ Global
 		Release|anycpu = Release|anycpu
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Debug|anycpu.ActiveCfg = Debug|anycpu
-		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Debug|anycpu.Build.0 = Debug|anycpu
-		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Release|anycpu.ActiveCfg = Release|anycpu
-		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Release|anycpu.Build.0 = Release|anycpu
+		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Release|anycpu.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {568C36C5-31FB-4CD0-B433-23D416DCE9F9}
 	EndGlobalSection
 EndGlobal
