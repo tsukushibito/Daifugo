@@ -1,46 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">anycpu</Platform>
-    <ProjectGuid>{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Daifugo</RootNamespace>
-    <AssemblyName>Daifugo</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|anycpu' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <NoStdLib>false</NoStdLib>
+    <OutputPath>bin\Debug\netstandard2.0</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|anycpu' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <NoStdLib>false</NoStdLib>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Card.cs" />
-    <Compile Include="Suit.cs" />
-    <Compile Include="ClientMessageTransceiver.cs" />
-    <Compile Include="Daifugo.cs" />
-    <Compile Include="DaifugoFunction.cs" />
-    <Compile Include="DaifugoStatus.cs" />
-    <Compile Include="Deck.cs" />
-    <Compile Include="EndMessage.cs" />
-    <Compile Include="LocalRule.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="ResultOfPlayingCards.cs" />
-    <Compile Include="RoleRank.cs" />
-    <Compile Include="ServerMessageTransceiver.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
