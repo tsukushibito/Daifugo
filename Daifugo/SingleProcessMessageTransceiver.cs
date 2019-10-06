@@ -6,15 +6,19 @@ namespace Daifugo
 {
     public class SingleProcessMessageTransceiver : IServerMessageTransceiver, IClientMessageTransceiver
     {
-        static SingleProcessMessageTransceiver()
-        {
-            Server = new SingleProcessMessageTransceiver();
-            Clients = new List<SingleProcessMessageTransceiver>();
-        }
 
         public static SingleProcessMessageTransceiver Server { get; private set; }
 
         public static List<SingleProcessMessageTransceiver> Clients { get; private set; }
+
+        private static Dictionary<int, SingleProcessMessageTransceiver> ClientTable;
+
+        static SingleProcessMessageTransceiver()
+        {
+            Server = new SingleProcessMessageTransceiver();
+            Clients = new List<SingleProcessMessageTransceiver>();
+            ClientTable = new Dictionary<int, SingleProcessMessageTransceiver>();
+        }
 
         /// <summary>
         /// ゲーム参加リクエスト受け取り時イベント
