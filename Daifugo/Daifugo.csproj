@@ -7,8 +7,10 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <NoStdLib>false</NoStdLib>
     <OutputPath>bin\Debug\netstandard2.0</OutputPath>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <NoStdLib>false</NoStdLib>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 </Project>
