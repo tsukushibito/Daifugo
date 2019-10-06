@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +10,7 @@ namespace Daifugo
     /// </summary>
     public class Daifugo
     {
-        private IServerMessageTransceiver messageTransceiver;
+        private readonly IServerMessageTransceiver messageTransceiver;
 
         private Deck deck;
 
@@ -26,26 +24,19 @@ namespace Daifugo
 
         private List<PrivateStatus> players;
 
-        private int playerCount = 0;
-
-        private int round = 0;
-
-        private int turn = 0;
+        private int playerCount;
 
         private Phase phase = Phase.AcceptingPlayer;
 
-        private bool isStoppedAcceptingPlayer = false;
-
-        private bool hasEnded = false;
-
+        private bool isStoppedAcceptingPlayer;
 
         public ReadOnlyCollection<LocalRule> LocalRules { get { return rules.AsReadOnly(); } }
 
-        public int Round { get { return round; } }
+        public int Round { get; private set; }
 
-        public int Turn { get { return turn; } }
+        public int Turn { get; private set; }
 
-        public bool HasEnded { get { return hasEnded; } }
+        public bool HasEnded { get; private set; }
 
         /// <summary>
         /// コンストラクタ
@@ -118,7 +109,7 @@ namespace Daifugo
                 }
             }
 
-            hasEnded = true;
+            HasEnded = true;
         }
 
         /// <summary>
@@ -158,9 +149,11 @@ namespace Daifugo
             }
 
             var id = players.Count;
-            var player = new PrivateStatus();
-            player.id = id;
-            player.hand = new List<Card>();
+            var player = new PrivateStatus
+            {
+                id = id,
+                hand = new List<Card>()
+            };
             players.Add(player);
 
             return id;
@@ -172,23 +165,27 @@ namespace Daifugo
         /// <returns></returns>
         private PublicStatus MakePublicStatus()
         {
-            var publicStatus = new PublicStatus();
-            publicStatus.field = fieldStack.FirstOrDefault();
-            publicStatus.phase = Phase.Trading;
-            publicStatus.turn = 0;
-            publicStatus.hasFlowed = false;
-            publicStatus.isElevenBack = false;
-            publicStatus.isKakumei = false;
-            publicStatus.isShibari = false;
-            publicStatus.playerStatuses = new List<PublicPlayerStatus>();
+            var publicStatus = new PublicStatus
+            {
+                field = fieldStack.FirstOrDefault(),
+                phase = Phase.Trading,
+                turn = 0,
+                hasFlowed = false,
+                isElevenBack = false,
+                isKakumei = false,
+                isShibari = false,
+                playerStatuses = new List<PublicPlayerStatus>()
+            };
             foreach (var player in players)
             {
-                var playerStatus = new PublicPlayerStatus();
-                playerStatus.id = player.id;
-                playerStatus.seat = player.seat;
-                playerStatus.roleRank = player.roleRank;
-                playerStatus.cardCount = player.hand.Count;
-                playerStatus.hasPassed = player.hasPassed;
+                var playerStatus = new PublicPlayerStatus
+                {
+                    id = player.id,
+                    seat = player.seat,
+                    roleRank = player.roleRank,
+                    cardCount = player.hand.Count,
+                    hasPassed = player.hasPassed
+                };
                 publicStatus.playerStatuses.Add(playerStatus);
             }
 
@@ -242,10 +239,10 @@ namespace Daifugo
                 switch (player.roleRank)
                 {
                     case RoleRank.Daifugo:
-                        opponent = players.Where(p => p.roleRank == RoleRank.Daihinmin).FirstOrDefault();
+                        opponent = players.FirstOrDefault(p => p.roleRank == RoleRank.Daihinmin);
                         break;
                     case RoleRank.Fugo:
-                        opponent = players.Where(p => p.roleRank == RoleRank.Hinmin).FirstOrDefault();
+                        opponent = players.FirstOrDefault(p => p.roleRank == RoleRank.Hinmin);
                         break;
                     default:
                         // logger(LogLevel.Error, "Player rank must be Daifugo or Fugo!");
@@ -287,7 +284,7 @@ namespace Daifugo
 
             do
             {
-                if (playerId != turn)
+                if (playerId != Turn)
                 {
                     // logger( LogLevel.Error, "Not player turn. Player(" + playerId + ")");
                     result = ResultOfPlaying.NotAccepted;
@@ -360,18 +357,12 @@ namespace Daifugo
             // ランクに応じたカード交換枚数を設定
             foreach (var player in players)
             {
-                switch (player.roleRank)
+                player.tradingCardCount = player.roleRank switch
                 {
-                    case RoleRank.Daifugo:
-                        player.tradingCardCount = 2;
-                        break;
-                    case RoleRank.Fugo:
-                        player.tradingCardCount = 1;
-                        break;
-                    default:
-                        player.tradingCardCount = 0;
-                        break;
-                }
+                    RoleRank.Daifugo => 2,
+                    RoleRank.Fugo => 1,
+                    _ => 0,
+                };
             }
 
             // デックをシャッフル
@@ -394,7 +385,7 @@ namespace Daifugo
             }
 
             // クライアントから交換カード受け取り待ち
-            while (players.Count(p => p.tradingCardCount > 0) > 0)
+            while (players.Any(p => p.tradingCardCount > 0))
             {
                 if (phase == Phase.End) return;
             }
@@ -450,12 +441,7 @@ namespace Daifugo
             }
 
             // ゲーム終了か各プレイヤーに通知
-            var isEnd = false;
-            if (players.Count(p => p.hand.Count == 0) <= 1)
-            {
-                // 手札が残っているプレイヤーが1人以下なら終了
-                isEnd = true;
-            }
+            var isEnd = players.Count(p => p.hand.Count == 0) <= 1;
 
             if (isEnd)
             {
@@ -464,23 +450,23 @@ namespace Daifugo
             else
             {
                 // ターンを進める
-                var now = turn;
+                var now = Turn;
                 do
                 {
-                    turn++;
-                    if (turn >= playerCount)
+                    Turn++;
+                    if (Turn >= playerCount)
                     {
-                        turn = 0;
+                        Turn = 0;
                     }
 
-                    if (turn == now)
+                    if (Turn == now)
                     {
                         // System.Diagnostics.Debug.Assert(false);
                         phase = Phase.End;
                     }
                     if (phase == Phase.End) return;
 
-                } while (players[turn].hand.Count == 0);
+                } while (players[Turn].hand.Count == 0);
 
                 phase = Phase.BeforPlaying;
             }
