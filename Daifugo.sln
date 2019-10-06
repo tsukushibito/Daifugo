@@ -2,9 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaifugoTest", "DaifugoTest\DaifugoTest.csproj", "{4583D730-4DF5-4BF1-9EE8-E58C494ADD4A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daifugo", "Daifugo\Daifugo.csproj", "{C3F4DDFE-A839-407F-BD9D-B813C7D93FBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daifugo", "Daifugo\Daifugo.csproj", "{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,14 +10,10 @@ Global
 		Release|anycpu = Release|anycpu
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4583D730-4DF5-4BF1-9EE8-E58C494ADD4A}.Debug|anycpu.ActiveCfg = Debug|Any CPU
-		{4583D730-4DF5-4BF1-9EE8-E58C494ADD4A}.Debug|anycpu.Build.0 = Debug|Any CPU
-		{4583D730-4DF5-4BF1-9EE8-E58C494ADD4A}.Release|anycpu.ActiveCfg = Release|Any CPU
-		{4583D730-4DF5-4BF1-9EE8-E58C494ADD4A}.Release|anycpu.Build.0 = Release|Any CPU
-		{C3F4DDFE-A839-407F-BD9D-B813C7D93FBF}.Debug|anycpu.ActiveCfg = Debug|Any CPU
-		{C3F4DDFE-A839-407F-BD9D-B813C7D93FBF}.Debug|anycpu.Build.0 = Debug|Any CPU
-		{C3F4DDFE-A839-407F-BD9D-B813C7D93FBF}.Release|anycpu.ActiveCfg = Release|Any CPU
-		{C3F4DDFE-A839-407F-BD9D-B813C7D93FBF}.Release|anycpu.Build.0 = Release|Any CPU
+		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{D6FC6541-5CF0-470F-8C28-9B7D6B13CE91}.Release|anycpu.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

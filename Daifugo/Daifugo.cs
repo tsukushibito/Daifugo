@@ -45,7 +45,6 @@ namespace Daifugo
 
         public int Turn { get { return turn; } }
 
-        public bool HasEnded { get { return hasEnded; } }
 
         /// <summary>
         /// コンストラクタ
