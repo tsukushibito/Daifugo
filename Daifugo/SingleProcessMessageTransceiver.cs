@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -11,13 +12,28 @@ namespace Daifugo
 
         public static List<SingleProcessMessageTransceiver> Clients { get; private set; }
 
-        private static Dictionary<int, SingleProcessMessageTransceiver> ClientTable;
+        private static readonly Dictionary<string, SingleProcessMessageTransceiver> _connectedClientTable;
+
+        public SingleProcessMessageTransceiver CreateClient()
+        {
+            var client = new SingleProcessMessageTransceiver();
+            Clients.Add(client);
+            return client;
+        }
+
+        private static string CreateConnection(SingleProcessMessageTransceiver client)
+        {
+            var id = Guid.NewGuid();
+            var idStr = id.ToString();
+            _connectedClientTable.Add(idStr, client);
+            return idStr;
+        }
 
         static SingleProcessMessageTransceiver()
         {
             Server = new SingleProcessMessageTransceiver();
             Clients = new List<SingleProcessMessageTransceiver>();
-            ClientTable = new Dictionary<int, SingleProcessMessageTransceiver>();
+            _connectedClientTable = new Dictionary<string, SingleProcessMessageTransceiver>();
         }
 
         /// <summary>
@@ -33,15 +49,19 @@ namespace Daifugo
         /// <summary>
         /// プレイヤーIDを通知
         /// </summary>
+        /// <param name="connectionId"></param>
         /// <param name="playerId"></param>
         /// <returns></returns>
-        public Task SendPlayerIdAsync(int playerId)
+        public Task SendPlayerIdAsync(string connectionId, int playerId)
         {
             var task = new Task(() =>
             {
-                if (playerId < 0) return;
-                if (playerId >= Clients.Count) return;
-                Clients[playerId].ReceivedPlayerId?.Invoke(this, new ReceivedPlayerIdArgs(playerId));
+                if (string.IsNullOrEmpty(connectionId)) return;
+                SingleProcessMessageTransceiver client;
+                if (_connectedClientTable.TryGetValue(connectionId, out client))
+                {
+                    client.ReceivedPlayerId?.Invoke(this, new ReceivedPlayerIdArgs(playerId));
+                }
             });
             task.RunSynchronously();
             return task;
@@ -50,20 +70,23 @@ namespace Daifugo
         /// <summary>
         /// ゲーム情報通知
         /// </summary>
-        /// <param name="playerId"></param>
+        /// <param name="connectionId"></param>
         /// <param name="publicStatus"></param>
         /// <param name="privateStatus"></param>
         /// <returns></returns>
         public Task SendStatusAsync(
-            int playerId,
+            string connectionId,
             PublicStatus publicStatus,
             PrivateStatus privateStatus)
         {
             var task = new Task(() =>
             {
-                if (playerId < 0) return;
-                if (playerId >= Clients.Count) return;
-                Clients[playerId].ReceivedStatus?.Invoke(this, new ReceivedStatusArgs(publicStatus, privateStatus));
+                if (string.IsNullOrEmpty(connectionId)) return;
+                SingleProcessMessageTransceiver client;
+                if(_connectedClientTable.TryGetValue(connectionId, out client))
+                {
+                    client.ReceivedStatus?.Invoke(this, new ReceivedStatusArgs(publicStatus, privateStatus));
+                }
             });
             task.RunSynchronously();
             return task;
@@ -72,16 +95,19 @@ namespace Daifugo
         /// <summary>
         /// カード受理結果を通知
         /// </summary>
-        /// <param name="playerId"></param>
+        /// <param name="connectionId"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public Task SendResultOfPlayingAsync(int playerId, ResultOfPlaying result)
+        public Task SendResultOfPlayingAsync(string connectionId, ResultOfPlaying result)
         {
             var task = new Task(() =>
             {
-                if (playerId < 0) return;
-                if (playerId >= Clients.Count) return;
-                Clients[playerId].ReceivedResultOfPlaying?.Invoke(this, new ReceivedResultOfPlayingArgs(result));
+                if (string.IsNullOrEmpty(connectionId)) return;
+                SingleProcessMessageTransceiver client;
+                if (_connectedClientTable.TryGetValue(connectionId, out client))
+                {
+                    client.ReceivedResultOfPlaying?.Invoke(this, new ReceivedResultOfPlayingArgs(result));
+                }
             });
             task.RunSynchronously();
             return task;
@@ -91,16 +117,19 @@ namespace Daifugo
         /// ゲーム終了か通知
         /// Server2Client
         /// </summary>
-        /// <param name="playerId"></param>
+        /// <param name="connectionId"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public Task SendEndMessageAsync(int playerId, EndMessage message)
+        public Task SendEndMessageAsync(string connectionId, EndMessage message)
         {
             var task = new Task(() =>
             {
-                if (playerId < 0) return;
-                if (playerId >= Clients.Count) return;
-                Clients[playerId].ReceivedEndMessage?.Invoke(this, new ReceivedEndMessageArgs(message));
+                if (string.IsNullOrEmpty(connectionId)) return;
+                SingleProcessMessageTransceiver client;
+                if (_connectedClientTable.TryGetValue(connectionId, out client))
+                {
+                    client.ReceivedEndMessage?.Invoke(this, new ReceivedEndMessageArgs(message));
+                }
             });
             task.RunSynchronously();
             return task;
@@ -121,7 +150,12 @@ namespace Daifugo
         {
             var task = new Task(() =>
             {
-                Server.ReceivedJoinRequest?.Invoke(this, new ReceivedJoinRequestArgs());
+                var id = _connectedClientTable.Where(p => p.Value == this).Select(p => p.Key).FirstOrDefault();
+                if(string.IsNullOrEmpty(id))
+                {
+                    id = CreateConnection(this);
+                }
+                Server.ReceivedJoinRequest?.Invoke(this, new ReceivedJoinRequestArgs(id));
             });
             task.RunSynchronously();
             return task;

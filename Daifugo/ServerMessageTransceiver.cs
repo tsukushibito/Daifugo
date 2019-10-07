@@ -6,6 +6,12 @@ namespace Daifugo
 {
     public class ReceivedJoinRequestArgs : EventArgs
     {
+        public ReceivedJoinRequestArgs(string id)
+        {
+            ConnectionId = id;
+        }
+
+        public string ConnectionId { get; set; }
     }
 
     public class ReceivedCardsArgs : EventArgs
@@ -38,37 +44,38 @@ namespace Daifugo
         /// <summary>
         /// プレイヤーIDを通知
         /// </summary>
+        /// <param name="connectionId"></param>
         /// <param name="playerId"></param>
         /// <returns></returns>
-        Task SendPlayerIdAsync(int playerId);
+        Task SendPlayerIdAsync(string connectionId, int playerId);
 
         /// <summary>
         /// ゲーム情報通知
         /// </summary>
-        /// <param name="playerId"></param>
+        /// <param name="connectionId"></param>
         /// <param name="publicStatus"></param>
         /// <param name="privateStatus"></param>
         /// <returns></returns>
         Task SendStatusAsync(
-            int playerId,
+            string connectionId,
             PublicStatus status,
             PrivateStatus privateStatus);
 
         /// <summary>
         /// カード受理結果を通知
         /// </summary>
-        /// <param name="playerId"></param>
+        /// <param name="connectionId"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        Task SendResultOfPlayingAsync(int playerId, ResultOfPlaying result);
+        Task SendResultOfPlayingAsync(string connectionId, ResultOfPlaying result);
 
         /// <summary>
         /// ゲーム終了か通知
         /// Server2Client
         /// </summary>
-        /// <param name="playerId"></param>
+        /// <param name="connectionId"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        Task SendEndMessageAsync(int playerId, EndMessage message);
+        Task SendEndMessageAsync(string connectionId, EndMessage message);
     }
 }

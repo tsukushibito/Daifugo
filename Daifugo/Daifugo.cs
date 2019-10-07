@@ -12,6 +12,8 @@ namespace Daifugo
     {
         private readonly IServerMessageTransceiver messageTransceiver;
 
+        private readonly Dictionary<int, string> playerIdToConnectionIdMap = new Dictionary<int, string>();
+
         private Deck deck;
 
         private List<LocalRule> rules;
@@ -49,7 +51,14 @@ namespace Daifugo
 
             this.messageTransceiver.ReceivedJoinRequest += (sender, args) =>
             {
-                AddPlayer();
+                var playerId = LetPlayerJoin();
+                var connectionId = args.ConnectionId;
+                if(playerId != -1)
+                {
+                    playerIdToConnectionIdMap.Add(playerId, connectionId);
+                }
+                var task = messageTransceiver.SendPlayerIdAsync(connectionId, playerId);
+                task.RunSynchronously();
             };
 
             this.messageTransceiver.ReceivedCards += (sender, args) =>
@@ -141,7 +150,7 @@ namespace Daifugo
         /// 参加不可の場合-1を返す
         /// </summary>
         /// <returns>プレイヤーID</returns>
-        private int AddPlayer()
+        private int LetPlayerJoin()
         {
             if (players.Count >= playerCount)
             {
@@ -376,7 +385,9 @@ namespace Daifugo
             var tasks = new List<Task>();
             foreach (var player in players)
             {
-                var task = messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
+                string connection;
+                playerIdToConnectionIdMap.TryGetValue(player.id, out connection);
+                var task = messageTransceiver.SendStatusAsync(connection, publicStatus, player);
                 tasks.Add(task);
             }
             foreach (var task in tasks)
@@ -404,7 +415,9 @@ namespace Daifugo
             var tasks = new List<Task>();
             foreach (var player in players)
             {
-                var task = messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
+                string connection;
+                playerIdToConnectionIdMap.TryGetValue(player.id, out connection);
+                var task = messageTransceiver.SendStatusAsync(connection, publicStatus, player);
                 tasks.Add(task);
             }
             foreach (var task in tasks)
@@ -432,7 +445,9 @@ namespace Daifugo
             var tasks = new List<Task>();
             foreach (var player in players)
             {
-                var task = messageTransceiver.SendStatusAsync(player.id, publicStatus, player);
+                string connection;
+                playerIdToConnectionIdMap.TryGetValue(player.id, out connection);
+                var task = messageTransceiver.SendStatusAsync(connection, publicStatus, player);
                 tasks.Add(task);
             }
             foreach (var task in tasks)
