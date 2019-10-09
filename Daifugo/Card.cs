@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+
 namespace Daifugo
 {
     /// <summary>
@@ -69,7 +71,15 @@ namespace Daifugo
         public Card(Suit suit, int number)
         {
             this.suit = suit;
-            this.number = suit == Suit.Joker ? JokerNumber : number;
+            if(suit == Suit.Joker)
+            {
+                this.number = JokerNumber;
+            }
+            else
+            {
+                Debug.Assert(number >= 1 && number <= 13, "Number must be between 1 and 13!");
+                this.number = Math.Min(Math.Max(number, 1), 13);
+            }
         }
 
 
