@@ -13,7 +13,7 @@ namespace Daifugo
         /// <returns></returns>
         public static int NumberToRank(int number)
         {
-            if (number > 13) return number;
+            if (number > 13) return Card.JokerNumber;
             var rank = number - 2;
             if (rank <= 0)
             {
