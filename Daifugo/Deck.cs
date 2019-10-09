@@ -88,7 +88,7 @@ namespace Daifugo
         /// カードリストの先頭カードを取り出します
         /// </summary>
         /// <returns></returns>
-        public Nullable<Card> Pop()
+        public Card? Pop()
         {
             if (cards == null || cards.Count == 0)
             {
