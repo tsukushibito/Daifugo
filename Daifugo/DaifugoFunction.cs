@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Daifugo
 {
@@ -50,6 +51,9 @@ namespace Daifugo
         /// <param name="seats"></param>
         public static void AssignPlayersToSeats(List<PrivateStatus> players, List<Seat> seats)
         {
+            Debug.Assert(players != null);
+            Debug.Assert(seats != null);
+
             var temp = players.OrderBy(_ => Guid.NewGuid()).ToList();
             for (int i = 0; i < temp.Count; ++i)
             {
