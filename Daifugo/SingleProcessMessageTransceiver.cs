@@ -14,7 +14,7 @@ namespace Daifugo
 
         private static readonly Dictionary<string, SingleProcessMessageTransceiver> _connectedClientTable;
 
-        public SingleProcessMessageTransceiver CreateClient()
+        public static SingleProcessMessageTransceiver CreateClient()
         {
             var client = new SingleProcessMessageTransceiver();
             Clients.Add(client);
@@ -83,7 +83,7 @@ namespace Daifugo
             {
                 if (string.IsNullOrEmpty(connectionId)) return;
                 SingleProcessMessageTransceiver client;
-                if(_connectedClientTable.TryGetValue(connectionId, out client))
+                if (_connectedClientTable.TryGetValue(connectionId, out client))
                 {
                     client.ReceivedStatus?.Invoke(this, new ReceivedStatusArgs(publicStatus, privateStatus));
                 }
@@ -151,7 +151,7 @@ namespace Daifugo
             var task = new Task(() =>
             {
                 var id = _connectedClientTable.Where(p => p.Value == this).Select(p => p.Key).FirstOrDefault();
-                if(string.IsNullOrEmpty(id))
+                if (string.IsNullOrEmpty(id))
                 {
                     id = CreateConnection(this);
                 }
