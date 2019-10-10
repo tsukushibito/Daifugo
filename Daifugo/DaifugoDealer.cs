@@ -8,8 +8,20 @@ namespace Daifugo
     /// <summary>
     /// 大富豪管理クラス
     /// </summary>
-    public class Daifugo
+    public class DaifugoDealer
     {
+        public struct Configuration
+        {
+            public readonly int playerCount;
+            public readonly List<LocalRule> localRules;
+
+            public Configuration(int playerCount, List<LocalRule> localRules)
+            {
+                this.playerCount = playerCount;
+                this.localRules = localRules;
+            }
+        };
+
         private readonly IServerMessageTransceiver messageTransceiver;
 
         private readonly Dictionary<int, string> playerIdToConnectionIdMap = new Dictionary<int, string>();
@@ -43,17 +55,17 @@ namespace Daifugo
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public Daifugo(IServerMessageTransceiver messageTransceiver)
+        public DaifugoDealer(Configuration config, IServerMessageTransceiver messageTransceiver)
         {
             this.messageTransceiver = messageTransceiver;
 
-            InitializeGame(5, null);
+            InitializeGame(config.playerCount, config.localRules);
 
             this.messageTransceiver.ReceivedJoinRequest += (sender, args) =>
             {
                 var playerId = LetPlayerJoin();
                 var connectionId = args.ConnectionId;
-                if(playerId != -1)
+                if (playerId != -1)
                 {
                     playerIdToConnectionIdMap.Add(playerId, connectionId);
                 }
