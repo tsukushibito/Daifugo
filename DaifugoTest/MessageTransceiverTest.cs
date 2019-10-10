@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Xunit;
 using Daifugo;
@@ -23,7 +24,8 @@ namespace DaifugoTest
                 connectionId = args.ConnectionId;
             };
 
-            client.SendJoinRequestAsync();
+            var task = client.SendJoinRequestAsync();
+            task.Wait();
 
             Assert.False(string.IsNullOrEmpty(connectionId));
         }
@@ -34,9 +36,10 @@ namespace DaifugoTest
         {
             const int TestPlayerId = 0;
 
+            Task sendPlayerIdTask = null;
             server.ReceivedJoinRequest += (sender, args) =>
             {
-                server.SendPlayerIdAsync(args.ConnectionId, TestPlayerId);
+                sendPlayerIdTask = server.SendPlayerIdAsync(args.ConnectionId, TestPlayerId);
             };
 
             int playerId = -1;
@@ -45,7 +48,9 @@ namespace DaifugoTest
                 playerId = args.PlayerId;
             };
 
-            client.SendJoinRequestAsync();
+            var sendJoinRequestTask = client.SendJoinRequestAsync();
+            sendJoinRequestTask.Wait();
+            sendPlayerIdTask.Wait();
 
             Assert.Equal(TestPlayerId, playerId);
         }
@@ -60,7 +65,8 @@ namespace DaifugoTest
                 connectionId = args.ConnectionId;
             };
 
-            client.SendJoinRequestAsync();
+            var sendJoinRequestTask = client.SendJoinRequestAsync();
+            sendJoinRequestTask.Wait();
 
             var publicStatus = new PublicStatus
             {
@@ -141,9 +147,9 @@ namespace DaifugoTest
                 result = args.Result;
             };
 
-            client.SendJoinRequestAsync();
+            client.SendJoinRequestAsync().Wait();
 
-            server.SendResultOfPlayingAsync(connectionId, ResultOfPlaying.Accepted);
+            server.SendResultOfPlayingAsync(connectionId, ResultOfPlaying.Accepted).Wait();
 
             Assert.Equal(ResultOfPlaying.Accepted, result);
         }
@@ -164,9 +170,9 @@ namespace DaifugoTest
                 msg = args.EndMessage;
             };
 
-            client.SendJoinRequestAsync();
+            client.SendJoinRequestAsync().Wait();
 
-            server.SendEndMessageAsync(connectionId, EndMessage.EndGame);
+            server.SendEndMessageAsync(connectionId, EndMessage.EndGame).Wait();
 
             Assert.Equal(EndMessage.EndGame, msg);
         }
