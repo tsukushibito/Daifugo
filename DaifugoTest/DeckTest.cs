@@ -22,7 +22,8 @@ namespace DaifugoTest
         {
             var deck = new Deck();
             var cardCount = deck.Cards.Count();
-            for (int i = 0; i < 53; ++i) {
+            for (int i = 0; i < 53; ++i)
+            {
                 deck.Pop();
             }
 

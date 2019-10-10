@@ -201,85 +201,85 @@ namespace DaifugoTest
         public static TheoryData<List<Card>, List<Card>, bool> ArePlayedCardsValidTestData =>
             new TheoryData<List<Card>, List<Card>, bool>
             {
-                // ƒtƒB[ƒ‹ƒh–³‚µ‚Ì1–‡o‚µ
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½oï¿½ï¿½
                 {
                     new List<Card>{ new Card(Suit.Spades, 13)},
                     null,
                     true
                 },
-                // ƒtƒB[ƒ‹ƒh–³‚µ‚Ì1–‡o‚µ–³ŒøƒJ[ƒh
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½[ï¿½h
                 {
                     new List<Card>{ new Card(Suit.Spades, 4)},
                     null,
                     false
                 },
-                // ƒtƒB[ƒ‹ƒh1–‡‚Ì1–‡o‚µ
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½h1ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½oï¿½ï¿½
                 {
                     new List<Card>{ new Card(Suit.Spades, 13)},
                     new List<Card>{ new Card(Suit.Spades, 3)},
                     true
                 },
-                // ƒtƒB[ƒ‹ƒh1–‡‚Ì1–‡o‚µ–³ŒøƒJ[ƒh
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½h1ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½[ï¿½h
                 {
                     new List<Card>{ new Card(Suit.Spades, 13)},
                     new List<Card>{ new Card(Suit.Hearts, 1)},
                     false
                 },
-                // ƒtƒB[ƒ‹ƒh2–‡‚Ì1–‡o‚µ
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½h2ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½oï¿½ï¿½
                 {
                     new List<Card>{ new Card(Suit.Spades, 13)},
                     new List<Card>{ new Card(Suit.Spades, 3), new Card(Suit.Hearts, 3)},
                     false
                 },
-                // ƒtƒB[ƒ‹ƒh2–‡‚Ì2–‡o‚µ
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½h2ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½oï¿½ï¿½
                 {
                     new List<Card>{ new Card(Suit.Spades, 13), new Card(Suit.Hearts, 13)},
                     new List<Card>{ new Card(Suit.Spades, 3), new Card(Suit.Hearts, 3)},
                     true
                 },
-                // ƒtƒB[ƒ‹ƒh2–‡‚ÌƒWƒ‡[ƒJ[‚İ2–‡o‚µ
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½h2ï¿½ï¿½ï¿½ÌƒWï¿½ï¿½ï¿½[ï¿½Jï¿½[ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½oï¿½ï¿½
                 {
                     new List<Card>{ new Card(Suit.Spades, 13), new Card(Suit.Joker, Card.JokerNumber)},
                     new List<Card>{ new Card(Suit.Spades, 3), new Card(Suit.Hearts, 3)},
                     true
                 },
-                // ƒtƒB[ƒ‹ƒh2–‡‚ÌƒWƒ‡[ƒJ[‚İ2–‡o‚µ–³Œø‘g‚İ‡‚í‚¹
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½h2ï¿½ï¿½ï¿½ÌƒWï¿½ï¿½ï¿½[ï¿½Jï¿½[ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½İï¿½ï¿½í‚¹
                 {
                     new List<Card>{ new Card(Suit.Spades, 13), new Card(Suit.Joker, Card.JokerNumber)},
                     new List<Card>{ new Card(Suit.Spades, 1), new Card(Suit.Hearts, 1)},
                     false
                 },
-                // ƒtƒB[ƒ‹ƒhŠK’i‚ÌŠK’i‚¾‚µ
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½Kï¿½iï¿½ÌŠKï¿½iï¿½ï¿½ï¿½ï¿½
                 {
                     new List<Card>{ new Card(Suit.Spades, 13), new Card(Suit.Spades, 1), new Card(Suit.Spades, 2)},
                     new List<Card>{ new Card(Suit.Spades, 3), new Card(Suit.Spades, 4), new Card(Suit.Spades, 5)},
                     true
                 },
-                // ƒtƒB[ƒ‹ƒhŠK’i‚ÌŠK’i‚¾‚µ–³ŒøƒJ[ƒh
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½Kï¿½iï¿½ÌŠKï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½[ï¿½h
                 {
                     new List<Card>{ new Card(Suit.Spades, 13), new Card(Suit.Spades, 1), new Card(Suit.Spades, 2), new Card(Suit.Joker, 0)},
                     new List<Card>{ new Card(Suit.Spades, 3), new Card(Suit.Spades, 4), new Card(Suit.Spades, 5)},
                     false
                 },
-                // ƒtƒB[ƒ‹ƒhŠK’i‚ÌŠK’i‚¾‚µ–³ŒøƒJ[ƒh
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½Kï¿½iï¿½ÌŠKï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½[ï¿½h
                 {
                     new List<Card>{ new Card(Suit.Spades, 12), new Card(Suit.Spades, 13), new Card(Suit.Spades, 1)},
                     new List<Card>{ new Card(Suit.Hearts, 10), new Card(Suit.Hearts, 11), new Card(Suit.Hearts, 12)},
                     false
                 },
-                // ƒtƒB[ƒ‹ƒhŠK’i‚ÌƒWƒ‡[ƒJ[ŠK’i‚¾‚µ
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½Kï¿½iï¿½ÌƒWï¿½ï¿½ï¿½[ï¿½Jï¿½[ï¿½ï¿½ï¿½Kï¿½iï¿½ï¿½ï¿½ï¿½
                 {
                     new List<Card>{ new Card(Suit.Joker, 0), new Card(Suit.Spades, 13), new Card(Suit.Spades, 1)},
                     new List<Card>{ new Card(Suit.Hearts, 10), new Card(Suit.Hearts, 11), new Card(Suit.Hearts, 12)},
                     true
                 },
-                // ƒtƒB[ƒ‹ƒhŠK’i‚ÌƒWƒ‡[ƒJ[ŠK’i‚¾‚µ
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½Kï¿½iï¿½ÌƒWï¿½ï¿½ï¿½[ï¿½Jï¿½[ï¿½ï¿½ï¿½Kï¿½iï¿½ï¿½ï¿½ï¿½
                 {
                     new List<Card>{ new Card(Suit.Joker, 0), new Card(Suit.Spades, 1), new Card(Suit.Spades, 2)},
                     new List<Card>{ new Card(Suit.Hearts, 11), new Card(Suit.Hearts, 12), new Card(Suit.Hearts, 13)},
                     true
                 },
-                // ƒtƒB[ƒ‹ƒhŠK’i‚ÌƒWƒ‡[ƒJ[ŠK’i‚¾‚µ–³ŒøƒJ[ƒh
+                // ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½Kï¿½iï¿½ÌƒWï¿½ï¿½ï¿½[ï¿½Jï¿½[ï¿½ï¿½ï¿½Kï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½[ï¿½h
                 {
                     new List<Card>{ new Card(Suit.Joker, 0), new Card(Suit.Spades, 12), new Card(Suit.Spades, 13)},
                     new List<Card>{ new Card(Suit.Hearts, 10), new Card(Suit.Hearts, 11), new Card(Suit.Hearts, 12)},

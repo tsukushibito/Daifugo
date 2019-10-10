@@ -3,7 +3,7 @@ using Xunit;
 
 namespace DaifugoTest
 {
-    public class UnitTest1
+    public class DaifugoTest
     {
         [Fact]
         public void Test1()
