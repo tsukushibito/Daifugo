@@ -66,9 +66,16 @@ namespace Daifugo
         public override string ToString()
         {
             string fieldCards = "";
-            foreach (var card in field)
+            if (field == null)
             {
-                fieldCards += card.ToString() + ", ";
+                fieldCards = "none";
+            }
+            else
+            {
+                foreach (var card in field)
+                {
+                    fieldCards += card.ToString() + ", ";
+                }
             }
             string str = "PublicStatus: {\n" +
             "    field: {" + fieldCards + "}\n" +
