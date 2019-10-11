@@ -52,6 +52,10 @@ namespace Daifugo
 
         public bool HasEnded { get; private set; }
 
+        public PublicStatus PublicStatus { get { return MakePublicStatus(); } }
+
+        public List<PrivateStatus> PlayersStatus { get { return ClonePlayerStatuses(); } }
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -497,6 +501,20 @@ namespace Daifugo
 
                 phase = Phase.BeforPlaying;
             }
+        }
+
+        /// <summary>
+        /// プレイヤーステータスを複製
+        /// </summary>
+        /// <returns></returns>
+        private List<PrivateStatus> ClonePlayerStatuses()
+        {
+            var statuses = new List<PrivateStatus>();
+            foreach (var player in players)
+            {
+                statuses.Add(player.Clone());
+            }
+            return statuses;
         }
     }
 }
