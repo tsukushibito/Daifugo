@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Daifugo
 {
@@ -61,35 +62,6 @@ namespace Daifugo
             }
 
             return clone;
-        }
-
-        public override string ToString()
-        {
-            string fieldCards = "";
-            if (field == null)
-            {
-                fieldCards = "none";
-            }
-            else
-            {
-                foreach (var card in field)
-                {
-                    fieldCards += card.ToString() + ", ";
-                }
-            }
-            string str = "PublicStatus: {\n" +
-            "    field: {" + fieldCards + "}\n" +
-            "    phase: " + phase + "\n" +
-            "    turn: " + turn + "\n" +
-            "    hasFlowed: " + hasFlowed + "\n" +
-            "    isElevenBack: " + isElevenBack + "\n" +
-            "    isKakumei: " + isKakumei + "\n" +
-            "    isShibari: " + isShibari + "\n" +
-            "    playerStatuses: {\n" +
-            "    }\n" +
-            "}";
-
-            return str;
         }
     }
 
