@@ -10,6 +10,9 @@ namespace Daifugo
     /// </summary>
     public class DaifugoDealer
     {
+        /// <summary>
+        /// 設定
+        /// </summary>
         public struct Configuration
         {
             public readonly int playerCount;
@@ -21,6 +24,7 @@ namespace Daifugo
                 this.localRules = localRules;
             }
         };
+
 
         private readonly IServerMessageTransceiver messageTransceiver;
 
@@ -44,17 +48,19 @@ namespace Daifugo
 
         private bool isStoppedAcceptingPlayer;
 
+        private bool hasEnded;
+
+        private int round;
+
+        private int turn;
+
+
         public ReadOnlyCollection<LocalRule> LocalRules { get { return rules.AsReadOnly(); } }
-
-        public int Round { get; private set; }
-
-        public int Turn { get; private set; }
-
-        public bool HasEnded { get; private set; }
 
         public PublicStatus PublicStatus { get { return MakePublicStatus(); } }
 
         public List<PrivateStatus> PlayersStatus { get { return ClonePlayerStatuses(); } }
+
 
         /// <summary>
         /// コンストラクタ
@@ -134,7 +140,7 @@ namespace Daifugo
                 }
             }
 
-            HasEnded = true;
+            hasEnded = true;
         }
 
         /// <summary>
@@ -192,10 +198,11 @@ namespace Daifugo
         {
             var publicStatus = new PublicStatus
             {
+                round = this.round,
                 field = fieldStack.FirstOrDefault(),
                 phase = Phase.Trading,
-                turn = 0,
-                hasFlowed = false,
+                turn = this.turn,
+                hasFlowed = fieldStack.Count == 0,
                 isElevenBack = false,
                 isKakumei = false,
                 isShibari = false,
@@ -309,7 +316,7 @@ namespace Daifugo
 
             do
             {
-                if (playerId != Turn)
+                if (playerId != turn)
                 {
                     // logger( LogLevel.Error, "Not player turn. Player(" + playerId + ")");
                     result = ResultOfPlaying.NotAccepted;
@@ -481,23 +488,23 @@ namespace Daifugo
             else
             {
                 // ターンを進める
-                var now = Turn;
+                var now = turn;
                 do
                 {
-                    Turn++;
-                    if (Turn >= playerCount)
+                    turn++;
+                    if (turn >= playerCount)
                     {
-                        Turn = 0;
+                        turn = 0;
                     }
 
-                    if (Turn == now)
+                    if (turn == now)
                     {
                         // System.Diagnostics.Debug.Assert(false);
                         phase = Phase.End;
                     }
                     if (phase == Phase.End) return;
 
-                } while (players[Turn].hand.Count == 0);
+                } while (players[turn].hand.Count == 0);
 
                 phase = Phase.BeforPlaying;
             }

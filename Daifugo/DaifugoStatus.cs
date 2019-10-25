@@ -35,6 +35,7 @@ namespace Daifugo
     /// </summary>
     public class PublicStatus
     {
+        public int round;
         public List<Card> field = new List<Card>();
         public Phase phase;
         public int turn = -1;
@@ -47,6 +48,7 @@ namespace Daifugo
         public PublicStatus Clone()
         {
             var clone = new PublicStatus();
+            clone.round = round;
             foreach (var card in field)
             {
                 field.Add(card);
